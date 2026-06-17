@@ -21,6 +21,19 @@ interface ProductInput {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PRODUCTS_DIR = resolve(__dirname, "..", "src", "content", "products");
 
+const VALID_CATEGORIES: ReadonlyArray<string> = [
+  "bow tie",
+  "necktie",
+  "pocket square",
+  "lapel flower",
+  "tie bar",
+  "wallet",
+];
+
+function isValidCategory(value: unknown): value is ProductInput["category"] {
+  return typeof value === "string" && VALID_CATEGORIES.includes(value);
+}
+
 function isProductInput(value: unknown): value is ProductInput {
   if (typeof value !== "object" || value === null) return false;
   const obj = value as Record<string, unknown>;
@@ -28,7 +41,7 @@ function isProductInput(value: unknown): value is ProductInput {
     typeof obj.slug === "string" &&
     typeof obj.name === "string" &&
     typeof obj.line === "string" &&
-    typeof obj.category === "string" &&
+    isValidCategory(obj.category) &&
     typeof obj.year === "number"
   );
 }

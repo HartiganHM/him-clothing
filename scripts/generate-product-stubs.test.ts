@@ -79,4 +79,17 @@ describe("runStubGenerator", () => {
     expect(() => runStubGenerator({ inputJsonPath: inputPath, force: false, outDir }))
       .toThrow(/invalid records/);
   });
+
+  it("rejects records with invalid category values", () => {
+    const inputPath = join(tmp, "input.json");
+    const outDir = join(tmp, "out");
+    writeFileSync(
+      inputPath,
+      JSON.stringify([
+        { slug: "a", name: "A", line: "L", category: "socks", year: 2016 },
+      ])
+    );
+    expect(() => runStubGenerator({ inputJsonPath: inputPath, force: false, outDir }))
+      .toThrow(/invalid records/);
+  });
 });

@@ -1,11 +1,16 @@
 #!/usr/bin/env tsx
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve, extname, basename } from "node:path";
+import { z } from "zod";
 
 interface UploadResult {
   filename: string;
   imageId: string;
 }
+
+const CloudflareUploadResponseSchema = z.object({
+  result: z.object({ id: z.string() }).optional(),
+});
 
 const IMAGE_EXTS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
 
@@ -42,12 +47,11 @@ export async function uploadOne(args: {
     throw new Error(`Upload failed for ${args.filename}: ${res.status} ${text}`);
   }
 
-  const json = (await res.json()) as { result?: { id?: unknown } };
-  const id = json.result?.id;
-  if (typeof id !== "string") {
+  const parsed = CloudflareUploadResponseSchema.safeParse(await res.json());
+  if (!parsed.success || !parsed.data.result?.id) {
     throw new Error(`Upload for ${args.filename} returned no image id.`);
   }
-  return id;
+  return parsed.data.result.id;
 }
 
 export function listImageFiles(dir: string): string[] {

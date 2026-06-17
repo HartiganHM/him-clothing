@@ -25,7 +25,8 @@
     "tsx": "^4.22.4",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
   },
   "packageManager": "pnpm@9.0.0"
 }
