@@ -711,6 +711,19 @@ export const CHROME_COPY = {
     wornAt: "Worn At",
     archive: "Archive",
   },
+  sections: {
+    story: {
+      eyebrow: "Story",
+    },
+    wornAt: {
+      eyebrow: "Worn At",
+      subtitle: "Real customer weddings.",
+    },
+    archive: {
+      eyebrow: "Archive",
+      subtitle: "Everything we made, grouped by line.",
+    },
+  },
   footer: {
     yearSpan: "2014–2018",
     dedication: "For everyone who made HIM Clothing what it was.",
@@ -719,6 +732,8 @@ export const CHROME_COPY = {
   },
 } as const;
 ```
+
+Note: `as const` here is a TypeScript const assertion that narrows literal types, not an `as` cast (`x as T`). The Global Constraint forbids the latter — type-narrowing assertions are fine and idiomatic for readonly config objects.
 
 - [ ] **Step 4.2: Write `src/components/Nav.astro`**
 
@@ -810,22 +825,28 @@ import Footer from "../components/Footer.astro";
   <Hero anchorPhotoId="placeholder-hero" />
 
   <section id="story" class="max-w-3xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">Story</h2>
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.story.eyebrow}</h2>
     <p class="text-(--color-muted)">(Story sections render here in Task 5.)</p>
   </section>
 
   <section id="worn-at" class="max-w-6xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">Worn At —</h2>
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.wornAt.eyebrow}</h2>
     <p class="text-(--color-muted)">(Gallery renders here in Task 6.)</p>
   </section>
 
   <section id="archive" class="max-w-6xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">Archive</h2>
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.archive.eyebrow}</h2>
     <p class="text-(--color-muted)">(Product lines render here in Task 7.)</p>
   </section>
 
   <Footer />
 </BaseLayout>
+```
+
+Also add to the index frontmatter imports:
+
+```ts
+import { CHROME_COPY } from "../lib/copy";
 ```
 
 - [ ] **Step 4.6: Verify**
@@ -957,6 +978,7 @@ import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
 import StorySection from "../components/StorySection.astro";
+import { CHROME_COPY } from "../lib/copy";
 import { getCollection, render } from "astro:content";
 
 const storyEntries = (await getCollection("story")).sort(
@@ -976,7 +998,7 @@ const rendered = await Promise.all(
 
   <section id="story" class="py-16">
     <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
-      <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted)">Story</h2>
+      <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted)">{CHROME_COPY.sections.story.eyebrow}</h2>
     </header>
     {rendered.map(({ entry, Content }) => (
       <StorySection title={entry.data.title} order={entry.data.order}>
@@ -1120,6 +1142,7 @@ const wornEntries = productsWorn
 ---
 import { getCollection } from "astro:content";
 import { groupBy } from "../lib/group-by";
+import { CHROME_COPY } from "../lib/copy";
 import WornAtCard from "./WornAtCard.astro";
 
 const [weddings, products] = await Promise.all([
@@ -1134,8 +1157,8 @@ const years = [...grouped.keys()].sort((a, b) => b - a);
 ---
 <section id="worn-at" class="py-32">
   <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
-    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">Worn At</h2>
-    <p class="text-2xl tracking-tight">Real customer weddings.</p>
+    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">{CHROME_COPY.sections.wornAt.eyebrow}</h2>
+    <p class="text-2xl tracking-tight">{CHROME_COPY.sections.wornAt.subtitle}</p>
   </header>
 
   {weddings.length === 0 ? (
@@ -1303,6 +1326,7 @@ const compact = products.filter((p) => !p.data.hero);
 ---
 import { getCollection } from "astro:content";
 import { groupBy } from "../lib/group-by";
+import { CHROME_COPY } from "../lib/copy";
 import LineGroup from "./LineGroup.astro";
 
 const products = await getCollection("products");
@@ -1311,8 +1335,8 @@ const lines = [...grouped.keys()].sort((a, b) => a.localeCompare(b));
 ---
 <section id="archive" class="py-32 border-t border-(--color-rule)/10">
   <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
-    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">Archive</h2>
-    <p class="text-2xl tracking-tight">Everything we made, grouped by line.</p>
+    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">{CHROME_COPY.sections.archive.eyebrow}</h2>
+    <p class="text-2xl tracking-tight">{CHROME_COPY.sections.archive.subtitle}</p>
   </header>
 
   {products.length === 0 ? (
@@ -1859,12 +1883,22 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 import { describe, it, expect, vi } from "vitest";
 import { uploadOne } from "./upload-photos";
 
+function mockJsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
+function mockTextResponse(body: string, status = 200): Response {
+  return new Response(body, { status });
+}
+
 describe("uploadOne", () => {
   it("posts to Cloudflare and returns the image id", async () => {
-    const fetchImpl = vi.fn(async () => ({
-      ok: true,
-      json: async () => ({ result: { id: "img-xyz" } }),
-    })) as unknown as typeof fetch;
+    const fetchImpl = vi.fn<typeof fetch>(async () =>
+      mockJsonResponse({ result: { id: "img-xyz" } })
+    );
 
     const id = await uploadOne({
       accountId: "acct",
@@ -1881,11 +1915,9 @@ describe("uploadOne", () => {
   });
 
   it("throws when Cloudflare returns a non-ok response", async () => {
-    const fetchImpl = vi.fn(async () => ({
-      ok: false,
-      status: 401,
-      text: async () => "unauthorized",
-    })) as unknown as typeof fetch;
+    const fetchImpl = vi.fn<typeof fetch>(async () =>
+      mockTextResponse("unauthorized", 401)
+    );
 
     await expect(
       uploadOne({
@@ -1899,10 +1931,9 @@ describe("uploadOne", () => {
   });
 
   it("throws when the response shape is missing an id", async () => {
-    const fetchImpl = vi.fn(async () => ({
-      ok: true,
-      json: async () => ({ result: {} }),
-    })) as unknown as typeof fetch;
+    const fetchImpl = vi.fn<typeof fetch>(async () =>
+      mockJsonResponse({ result: {} })
+    );
 
     await expect(
       uploadOne({
@@ -1947,7 +1978,6 @@ git commit -m "feat: add helper scripts for product stub generation and Cloudfla
 
 **Files:**
 - Create: `.github/workflows/ci.yml`
-- Create: `.lycheeignore` (allow known-broken or placeholder URLs)
 
 **Interfaces:**
 - Consumes: GitHub Actions runner.
@@ -2003,17 +2033,10 @@ jobs:
 
 The `imagedelivery.net` exclusion is because in CI the env var is a placeholder; image URLs would all 404. Real-image link verification happens on the deployed Cloudflare Pages URL via Cloudflare's own checks.
 
-- [ ] **Step 11.2: Write `.lycheeignore`**
-
-```
-# Allow placeholder image IDs to fail without breaking CI
-.*imagedelivery\.net/.*
-```
-
-- [ ] **Step 11.3: Verify locally with `act` is optional; commit**
+- [ ] **Step 11.2: Verify locally with `act` is optional; commit**
 
 ```bash
-git add .github/ .lycheeignore
+git add .github/
 git commit -m "ci: add build + link-check workflow"
 ```
 
