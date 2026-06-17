@@ -1,0 +1,30 @@
+---
+import { CHROME_COPY } from "../lib/copy";
+---
+
+<nav
+  class="sticky top-0 z-50 w-full backdrop-blur bg-(--color-paper)/85 border-b border-(--color-rule)/10"
+>
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="#top" class="font-semibold tracking-tight text-base no-underline">
+      {CHROME_COPY.brand.wordmark}
+    </a>
+    <ul class="flex gap-6 text-sm">
+      <li>
+        <a href="#story" class="no-underline hover:underline"
+          >{CHROME_COPY.nav.story}</a
+        >
+      </li>
+      <li>
+        <a href="#worn-at" class="no-underline hover:underline"
+          >{CHROME_COPY.nav.wornAt}</a
+        >
+      </li>
+      <li>
+        <a href="#archive" class="no-underline hover:underline"
+          >{CHROME_COPY.nav.archive}</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>

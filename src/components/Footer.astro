@@ -1,0 +1,17 @@
+---
+import { CHROME_COPY } from "../lib/copy";
+
+const { yearSpan, dedication, sourceLabel, sourceUrl } = CHROME_COPY.footer;
+---
+
+<footer class="border-t border-(--color-rule)/10 mt-32">
+  <div
+    class="max-w-6xl mx-auto px-6 py-16 flex flex-col gap-6 text-sm text-(--color-muted)"
+  >
+    <p class="text-base text-(--color-ink)">{dedication}</p>
+    <div class="flex justify-between">
+      <span>{yearSpan}</span>
+      <a href={sourceUrl} class="no-underline hover:underline">{sourceLabel}</a>
+    </div>
+  </div>
+</footer>

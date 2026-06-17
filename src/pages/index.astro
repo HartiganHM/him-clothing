@@ -1,13 +1,29 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Photo from "../components/Photo.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Footer from "../components/Footer.astro";
+import { CHROME_COPY } from "../lib/copy";
 ---
-<BaseLayout title="HIM Clothing">
-  <main class="min-h-screen flex flex-col items-center justify-center gap-8">
-    <h1 class="text-6xl tracking-tight">HIM Clothing</h1>
-    <p class="text-sm text-(--color-muted)">
-      Bootstrap test — Photo component renders below (404 expected until a real id is provided).
-    </p>
-    <Photo id="placeholder" variant="card" alt="placeholder" class="w-64 h-auto bg-(--color-rule)" />
-  </main>
+
+<BaseLayout title="HIM Clothing — Handmade Outfitter">
+  <Nav />
+  <Hero anchorPhotoId="placeholder-hero" />
+
+  <section id="story" class="max-w-3xl mx-auto px-6 py-32">
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.story.eyebrow}</h2>
+    <p class="text-(--color-muted)">(Story sections render here in Task 5.)</p>
+  </section>
+
+  <section id="worn-at" class="max-w-6xl mx-auto px-6 py-32">
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.wornAt.eyebrow}</h2>
+    <p class="text-(--color-muted)">(Gallery renders here in Task 6.)</p>
+  </section>
+
+  <section id="archive" class="max-w-6xl mx-auto px-6 py-32">
+    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.archive.eyebrow}</h2>
+    <p class="text-(--color-muted)">(Product lines render here in Task 7.)</p>
+  </section>
+
+  <Footer />
 </BaseLayout>
