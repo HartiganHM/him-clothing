@@ -1,0 +1,93 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import Photo from "../../components/Photo.astro";
+import { CHROME_COPY } from "../../lib/copy";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((product: CollectionEntry<"products">) => ({
+    params: { slug: product.data.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: CollectionEntry<"products">;
+}
+
+const { product } = Astro.props;
+const { name, line, category, year, materials, description, photos, credits } =
+  product.data;
+---
+
+<BaseLayout title={`${name} — HIM Clothing`} description={description}>
+  <Nav />
+
+  <article class="max-w-4xl mx-auto px-6 pt-24 pb-32">
+    <header class="mb-16">
+      <a href="/#archive" class="no-underline text-sm text-(--color-muted) hover:underline">
+        {CHROME_COPY.productDetail.backToArchive}
+      </a>
+      <h1 class="text-5xl md:text-7xl tracking-tight font-semibold mt-6 mb-3">
+        {name}
+      </h1>
+      <p class="text-(--color-muted)">{line} · {category} · {year}</p>
+    </header>
+
+    <div class="flex flex-col gap-6 mb-16">
+      {photos.map((id: string, idx: number) => (
+        <Photo
+          id={id}
+          variant="detail"
+          alt={`${name} — photo ${idx + 1}`}
+          loading={idx === 0 ? "eager" : "lazy"}
+          class="w-full"
+        />
+      ))}
+    </div>
+
+    {description && (
+      <div class="text-lg leading-(--leading-relaxed) mb-12">
+        <p>{description}</p>
+      </div>
+    )}
+
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12 text-sm border-t border-(--color-rule)/10 pt-8">
+      {materials.length > 0 && (
+        <>
+          <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.materials}</dt>
+          <dd>{materials.join(", ")}</dd>
+        </>
+      )}
+      <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.line}</dt>
+      <dd>{line}</dd>
+      <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.category}</dt>
+      <dd>{category}</dd>
+      <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.year}</dt>
+      <dd>{year}</dd>
+      {credits?.designer && (
+        <>
+          <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.designer}</dt>
+          <dd>{credits.designer}</dd>
+        </>
+      )}
+      {credits?.photographer && (
+        <>
+          <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.photographer}</dt>
+          <dd>{credits.photographer}</dd>
+        </>
+      )}
+      {credits?.maker && (
+        <>
+          <dt class="text-(--color-muted)">{CHROME_COPY.productDetail.labels.maker}</dt>
+          <dd>{credits.maker}</dd>
+        </>
+      )}
+    </dl>
+  </article>
+
+  <Footer />
+</BaseLayout>

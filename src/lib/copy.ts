@@ -30,4 +30,16 @@ export const CHROME_COPY = {
     sourceLabel: "Source",
     sourceUrl: "https://github.com/HartiganHM/him-clothing",
   },
+  productDetail: {
+    backToArchive: "← Back to archive",
+    labels: {
+      materials: "Materials",
+      line: "Line",
+      category: "Category",
+      year: "Year",
+      designer: "Designer",
+      photographer: "Photographer",
+      maker: "Maker",
+    },
+  },
 } as const;
