@@ -1,8 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Photo from "../components/Photo.astro";
 ---
 <BaseLayout title="HIM Clothing">
-  <main class="min-h-screen flex items-center justify-center">
+  <main class="min-h-screen flex flex-col items-center justify-center gap-8">
     <h1 class="text-6xl tracking-tight">HIM Clothing</h1>
+    <p class="text-sm text-(--color-muted)">
+      Bootstrap test — Photo component renders below (404 expected until a real id is provided).
+    </p>
+    <Photo id="placeholder" variant="card" alt="placeholder" class="w-64 h-auto bg-(--color-rule)" />
   </main>
 </BaseLayout>

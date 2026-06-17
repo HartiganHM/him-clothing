@@ -1,0 +1,22 @@
+---
+import { cloudflareImageUrl, type PhotoVariant } from "../lib/cloudflare-images";
+
+interface Props {
+  id: string;
+  variant?: PhotoVariant;
+  alt: string;
+  class?: string;
+  loading?: "lazy" | "eager";
+}
+
+const {
+  id,
+  variant = "card",
+  alt,
+  class: className,
+  loading = "lazy",
+} = Astro.props;
+
+const src = cloudflareImageUrl(id, variant);
+---
+<img src={src} alt={alt} class={className} loading={loading} decoding="async" />
