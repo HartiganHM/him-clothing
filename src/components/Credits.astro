@@ -1,0 +1,26 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { CHROME_COPY } from "../lib/copy";
+
+const story = await getCollection("story");
+const thanks = story.find((entry: CollectionEntry<"story">) => entry.data.order === 6);
+const credits = thanks?.data.credits ?? [];
+---
+
+{
+  credits.length > 0 && (
+    <section class="max-w-3xl mx-auto px-6 pb-32">
+      <h3 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-8 text-center">
+        {CHROME_COPY.sections.credits.eyebrow}
+      </h3>
+      <dl class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-base">
+        {credits.map((credit: { name: string; contribution: string }) => (
+          <>
+            <dt class="font-medium whitespace-nowrap">{credit.name}</dt>
+            <dd class="text-(--color-muted)">{credit.contribution}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  )
+}

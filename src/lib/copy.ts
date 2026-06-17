@@ -23,6 +23,9 @@ export const CHROME_COPY = {
       subtitle: "Everything we made, grouped by line.",
       empty: "No products yet.",
     },
+    credits: {
+      eyebrow: "Credits",
+    },
   },
   footer: {
     yearSpan: "2014–2018",
