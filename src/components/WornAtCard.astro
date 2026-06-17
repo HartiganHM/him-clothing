@@ -15,7 +15,7 @@ if (!firstPhoto) {
 }
 
 const wornEntries = productsWorn
-  .map((ref: CollectionEntry<"products">) => productLookup.get(ref.id))
+  .map((ref: { id: string }) => productLookup.get(ref.id))
   .filter((entry: CollectionEntry<"products"> | undefined): entry is CollectionEntry<"products"> => entry !== undefined);
 ---
 

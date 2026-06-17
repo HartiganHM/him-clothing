@@ -24,7 +24,7 @@ const years = [...grouped.keys()].sort((a: number, b: number) => b - a);
   </header>
 
   {weddings.length === 0 ? (
-    <p class="text-center text-(--color-muted)">No wedding entries yet.</p>
+    <p class="text-center text-(--color-muted)">{CHROME_COPY.sections.wornAt.empty}</p>
   ) : (
     years.map((year) => (
       <div class="max-w-6xl mx-auto px-6 mb-24">

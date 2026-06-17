@@ -16,10 +16,12 @@ export const CHROME_COPY = {
     wornAt: {
       eyebrow: "Worn At",
       subtitle: "Real customer weddings.",
+      empty: "No wedding entries yet.",
     },
     archive: {
       eyebrow: "Archive",
       subtitle: "Everything we made, grouped by line.",
+      empty: "No products yet.",
     },
   },
   footer: {
