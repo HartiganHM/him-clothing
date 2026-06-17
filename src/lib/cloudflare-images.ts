@@ -21,5 +21,6 @@ export function cloudflareImageUrl(
   id: string,
   variant: PhotoVariant
 ): string {
-  return `https://imagedelivery.net/${accountHash()}/${id}/${VARIANT_NAMES[variant]}`;
+  const variantName = VARIANT_NAMES[variant] ?? "public";
+  return `https://imagedelivery.net/${accountHash()}/${id}/${variantName}`;
 }
