@@ -2,7 +2,7 @@
 
 **Status:** Design approved, pending implementation
 **Date:** 2026-06-17
-**Repo:** `~/Projects/him-clothing` → GitHub `HartiganHM/him-clothing` (public/private TBD)
+**Repo:** `~/Projects/him-clothing` → GitHub `HartiganHM/him-clothing` (public)
 **Production URL:** `himclothing.com` (registrar transfer to Cloudflare in progress; DNS already on Cloudflare)
 
 ---
@@ -36,7 +36,7 @@ No auth, no server logic, no interactivity beyond browsing in v1. Pure static.
 
 ### 1. Hero
 
-Wordmark + tagline (likely "Handmade Outfitter — HIM Clothing" or a variant), one strong anchor photo. Sticky nav above with anchors to Story / Worn At / Archive.
+Wordmark **HIM Clothing**, descriptor **Handmade Outfitter**, original tagline **"Classically Constructed, Vintage Inspired, Contemporary Designed."** One strong anchor photo. Sticky nav above with anchors to Story / Worn At / Archive.
 
 ### 2. Story (six sub-sections, ~1000 words total)
 
@@ -197,11 +197,9 @@ Sketched only — not committed.
 
 None. Side project. Done when done. Concert Crawl remains the priority.
 
-## Open questions to confirm before push
+## Open questions
 
-1. **Public or private GitHub repo?** Default-private is fine; public lets us link friends to source and enables free Cloudflare Pages without per-repo seat costs (which don't matter at this scale either way).
-2. **Original tagline.** "Handmade Outfitter — HIM Clothing" is what the Wayback page title used. "Classically Constructed, Vintage Inspired, Contemporary Designed" was the meta description. Owner picks which (or a new one) at implementation.
-3. **Section 5 (Wind-down) inclusion.** Owner decides during story-copy drafting; structurally optional.
+1. **Section 5 (Wind-down) inclusion.** Owner decides during story-copy drafting; structurally optional. (Deferred from design phase.)
 
 ---
 
