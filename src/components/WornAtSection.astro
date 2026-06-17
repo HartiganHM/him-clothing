@@ -1,0 +1,40 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { groupBy } from "../lib/group-by";
+import { CHROME_COPY } from "../lib/copy";
+import WornAtCard from "./WornAtCard.astro";
+
+const [weddings, products] = await Promise.all([
+  getCollection("weddings"),
+  getCollection("products"),
+]);
+
+const productLookup = new Map<string, CollectionEntry<"products">>(
+  products.map((p: CollectionEntry<"products">) => [p.id, p])
+);
+
+const grouped = groupBy(weddings, (w: CollectionEntry<"weddings">) => w.data.year);
+const years = [...grouped.keys()].sort((a: number, b: number) => b - a);
+---
+
+<section id="worn-at" class="py-32">
+  <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
+    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">{CHROME_COPY.sections.wornAt.eyebrow}</h2>
+    <p class="text-2xl tracking-tight">{CHROME_COPY.sections.wornAt.subtitle}</p>
+  </header>
+
+  {weddings.length === 0 ? (
+    <p class="text-center text-(--color-muted)">No wedding entries yet.</p>
+  ) : (
+    years.map((year) => (
+      <div class="max-w-6xl mx-auto px-6 mb-24">
+        <h3 class="text-3xl tracking-tight mb-8">{year}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {(grouped.get(year) ?? []).map((wedding) => (
+            <WornAtCard wedding={wedding} productLookup={productLookup} />
+          ))}
+        </div>
+      </div>
+    ))
+  )}
+</section>

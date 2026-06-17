@@ -1,0 +1,49 @@
+---
+import Photo from "./Photo.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  wedding: CollectionEntry<"weddings">;
+  productLookup: Map<string, CollectionEntry<"products">>;
+}
+
+const { wedding, productLookup } = Astro.props;
+const { customerName, year, location, productsWorn, caption, photos } = wedding.data;
+const firstPhoto = photos[0];
+if (!firstPhoto) {
+  throw new Error(`Wedding ${wedding.id} has no photos.`);
+}
+
+const wornEntries = productsWorn
+  .map((ref: CollectionEntry<"products">) => productLookup.get(ref.id))
+  .filter((entry: CollectionEntry<"products"> | undefined): entry is CollectionEntry<"products"> => entry !== undefined);
+---
+
+<figure class="flex flex-col gap-3">
+  <Photo
+    id={firstPhoto}
+    variant="card"
+    alt={customerName ? `${customerName} — ${year}` : `Wedding, ${year}`}
+    class="w-full aspect-[4/5] object-cover"
+  />
+  <figcaption class="text-sm text-(--color-ink) space-y-1">
+    {customerName && <p class="font-medium">{customerName}</p>}
+    <p class="text-(--color-muted)">
+      {[location, year].filter(Boolean).join(" · ")}
+    </p>
+    {wornEntries.length > 0 && (
+      <p class="text-(--color-muted)">
+        Worn:{" "}
+        {wornEntries.map((entry: CollectionEntry<"products">, idx: number) => (
+          <>
+            <a href={`/products/${entry.data.slug}`} class="no-underline hover:underline">
+              {entry.data.name}
+            </a>
+            {idx < wornEntries.length - 1 && ", "}
+          </>
+        ))}
+      </p>
+    )}
+    {caption && <p class="text-(--color-muted) italic mt-2">{caption}</p>}
+  </figcaption>
+</figure>
