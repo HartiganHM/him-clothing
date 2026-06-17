@@ -1,0 +1,24 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { groupBy } from "../lib/group-by";
+import { CHROME_COPY } from "../lib/copy";
+import LineGroup from "./LineGroup.astro";
+
+const products = await getCollection("products");
+const grouped = groupBy(products, (p: CollectionEntry<"products">) => p.data.line);
+const lines = [...grouped.keys()].sort((a, b) => a.localeCompare(b));
+---
+<section id="archive" class="py-32 border-t border-(--color-rule)/10">
+  <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
+    <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted) mb-4">{CHROME_COPY.sections.archive.eyebrow}</h2>
+    <p class="text-2xl tracking-tight">{CHROME_COPY.sections.archive.subtitle}</p>
+  </header>
+
+  {products.length === 0 ? (
+    <p class="text-center text-(--color-muted)">{CHROME_COPY.sections.archive.empty}</p>
+  ) : (
+    lines.map((line) => (
+      <LineGroup line={line} products={grouped.get(line) ?? []} />
+    ))
+  )}
+</section>
