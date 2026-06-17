@@ -3,25 +3,47 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
+import StorySection from "../components/StorySection.astro";
 import { CHROME_COPY } from "../lib/copy";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+const storyEntries = (await getCollection("story")).sort(
+  (a: CollectionEntry<"story">, b: CollectionEntry<"story">) =>
+    a.data.order - b.data.order
+);
+
+const rendered = await Promise.all(
+  storyEntries.map(async (entry: CollectionEntry<"story">) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
 ---
 
 <BaseLayout title="HIM Clothing — Handmade Outfitter">
   <Nav />
   <Hero anchorPhotoId="placeholder-hero" />
 
-  <section id="story" class="max-w-3xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.story.eyebrow}</h2>
-    <p class="text-(--color-muted)">(Story sections render here in Task 5.)</p>
+  <section id="story" class="py-16">
+    <header class="max-w-3xl mx-auto px-6 mb-16 text-center">
+      <h2 class="uppercase text-xs tracking-[0.3em] text-(--color-muted)">
+        {CHROME_COPY.sections.story.eyebrow}
+      </h2>
+    </header>
+    {rendered.map(({ entry, Content }) => (
+      <StorySection title={entry.data.title} order={entry.data.order}>
+        <Content />
+      </StorySection>
+    ))}
   </section>
 
   <section id="worn-at" class="max-w-6xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.wornAt.eyebrow}</h2>
+    <h2 class="text-4xl tracking-tight mb-8">Worn At —</h2>
     <p class="text-(--color-muted)">(Gallery renders here in Task 6.)</p>
   </section>
 
   <section id="archive" class="max-w-6xl mx-auto px-6 py-32">
-    <h2 class="text-4xl tracking-tight mb-8">{CHROME_COPY.sections.archive.eyebrow}</h2>
+    <h2 class="text-4xl tracking-tight mb-8">Archive</h2>
     <p class="text-(--color-muted)">(Product lines render here in Task 7.)</p>
   </section>
 
