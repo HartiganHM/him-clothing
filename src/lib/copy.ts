@@ -14,14 +14,16 @@ export const CHROME_COPY = {
       eyebrow: "Story",
     },
     wornAt: {
-      eyebrow: "Worn At",
+      eyebrow: "Worn At —",
       subtitle: "Real customer weddings.",
       empty: "No wedding entries yet.",
+      wornLabel: "Worn:",
     },
     archive: {
       eyebrow: "Archive",
       subtitle: "Everything we made, grouped by line.",
       empty: "No products yet.",
+      linePiecesLabel: "pieces",
     },
     credits: {
       eyebrow: "Credits",

@@ -1,4 +1,5 @@
 ---
+import { CHROME_COPY } from "../lib/copy";
 import Photo from "./Photo.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -33,7 +34,7 @@ const wornEntries = productsWorn
     </p>
     {wornEntries.length > 0 && (
       <p class="text-(--color-muted)">
-        Worn:{" "}
+        {CHROME_COPY.sections.wornAt.wornLabel}{" "}
         {wornEntries.map((entry: CollectionEntry<"products">, idx: number) => (
           <>
             <a href={`/products/${entry.data.slug}`} class="no-underline hover:underline">

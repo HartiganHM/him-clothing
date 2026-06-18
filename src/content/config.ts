@@ -1,3 +1,19 @@
+/**
+ * Content collection schemas (Astro 5 Content Layer).
+ *
+ * Convention:
+ * - Entry IDs come from the filename stem (everything before `.yaml` / `.mdx`).
+ * - `reference("products")` and `getCollection()` use entry IDs, NOT the `slug`
+ *   field defined in the product schema.
+ * - The `slug` field on products is used for URL routing only (`/products/<slug>`).
+ * - For real (non-sample) product files, filename stem === slug, so there's only
+ *   one source of truth. Sample files use a `_sample-` prefix that intentionally
+ *   diverges from the slug field so they're easy to spot and delete before launch.
+ *
+ * If you add a new product file, name it `<slug>.yaml` where `<slug>` matches the
+ * `slug:` field inside, and reference it from weddings as just `<slug>`.
+ */
+
 import { defineCollection, reference, z } from "astro:content";
 import { glob } from "astro/loaders";
 
@@ -37,7 +53,7 @@ const weddings = defineCollection({
   schema: z.object({
     slug: z.string(),
     customerName: z.string().optional(),
-    year: z.number().int().min(2014).max(2025),
+    year: z.number().int().min(2014).max(2030),
     location: z.string().optional(),
     productsWorn: z.array(reference("products")).default([]),
     caption: z.string().optional(),

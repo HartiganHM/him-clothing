@@ -1,4 +1,5 @@
 ---
+import { CHROME_COPY } from "../lib/copy";
 import ProductCard from "./ProductCard.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -14,7 +15,7 @@ const compact = products.filter((p) => !p.data.hero);
 <section class="max-w-6xl mx-auto px-6 mb-32">
   <header class="mb-12">
     <h3 class="text-3xl tracking-tight mb-2">{line}</h3>
-    <p class="text-sm text-(--color-muted)">{products.length} pieces</p>
+    <p class="text-sm text-(--color-muted)">{products.length} {CHROME_COPY.sections.archive.linePiecesLabel}</p>
   </header>
 
   {heroes.map((product) => (
